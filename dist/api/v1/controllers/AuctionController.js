@@ -30,6 +30,7 @@ const types_1 = __importDefault(require("@pbb/container/types"));
 const BaseController_1 = __importDefault(require("./BaseController"));
 const isAuth_1 = __importDefault(require("@pbb/middlewares/isAuth"));
 const ResponseUtils_1 = __importDefault(require("@pbb/utils/ResponseUtils"));
+const AuctionValidators_1 = __importDefault(require("../validators/AuctionValidators"));
 let AuctionController = class AuctionController extends BaseController_1.default {
     constructor(auctionService, bidMapper) {
         super();
@@ -79,7 +80,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuctionController.prototype, "listBids", null);
 __decorate([
-    (0, inversify_express_utils_1.httpPost)('/:auctionId/bid'),
+    (0, inversify_express_utils_1.httpPost)('/:auctionId/bid', ...AuctionValidators_1.default.placeBid),
     __param(0, (0, inversify_express_utils_1.request)()),
     __param(1, (0, inversify_express_utils_1.response)()),
     __metadata("design:type", Function),

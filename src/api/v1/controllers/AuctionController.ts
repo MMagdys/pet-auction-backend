@@ -8,6 +8,7 @@ import isAuth, { IRequest } from '@pbb/middlewares/isAuth';
 import ResponseUtils from '@pbb/utils/ResponseUtils';
 import { IAuctionService } from '@pbb/services/AuctionService';
 import { IBidMapper } from '@pbb/mappers/BidMapper';
+import AuctionValidator from '../validators/AuctionValidators';
 
 
 @controller('/v1/auction', isAuth)
@@ -43,7 +44,7 @@ export default class AuctionController extends BaseController {
         return ResponseUtils.ok(res, { bids: mappedBids });
     }
 
-    @httpPost('/:auctionId/bid')
+    @httpPost('/:auctionId/bid', ...AuctionValidator.placeBid)
     public async placeBid(@request() req: IRequest, @response() res: Response) {
 
         if (!this.validateRequest(req, res)) {
