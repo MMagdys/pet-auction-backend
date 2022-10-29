@@ -11,7 +11,7 @@ export default class ResponseUtils {
                 res.status(status).json({
                     meta: {
                         status,
-                        message: (res as any).__(splittedMessage[0], { attribute: splittedMessage[1] })
+                        message
                     },
                     data,
                 });

@@ -25,19 +25,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_express_utils_1 = require("inversify-express-utils");
+const inversify_1 = require("inversify");
+const types_1 = __importDefault(require("@pbb/container/types"));
 const BaseController_1 = __importDefault(require("./BaseController"));
 const isAuth_1 = __importDefault(require("@pbb/middlewares/isAuth"));
 const ResponseUtils_1 = __importDefault(require("@pbb/utils/ResponseUtils"));
 let AuctionController = class AuctionController extends BaseController_1.default {
-    constructor() {
+    constructor(auctionService, bidMapper) {
         super();
+        this.auctionService = auctionService;
+        this.bidMapper = bidMapper;
     }
     listBids(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.validateRequest(req, res)) {
                 return;
             }
-            return ResponseUtils_1.default.send(res, 200, "Bid added successfully!", {});
+            const user = req.user;
+            const userId = user._id.toString();
+            const auctionId = req.params.auctionId;
+            const bids = yield this.auctionService.getBidsList(userId, auctionId);
+            if (!bids) {
+                return ResponseUtils_1.default.unprocessable(res, 'Invalid options', {});
+            }
+            const mappedBids = yield Promise.all(bids.map((bid) => this.bidMapper.toDto(bid)));
+            return ResponseUtils_1.default.ok(res, { bids: mappedBids });
         });
     }
 };
@@ -51,6 +63,8 @@ __decorate([
 ], AuctionController.prototype, "listBids", null);
 AuctionController = __decorate([
     (0, inversify_express_utils_1.controller)('/v1/auction', isAuth_1.default),
-    __metadata("design:paramtypes", [])
+    __param(0, (0, inversify_1.inject)(types_1.default.IAuctionService)),
+    __param(1, (0, inversify_1.inject)(types_1.default.IBidMapper)),
+    __metadata("design:paramtypes", [Object, Object])
 ], AuctionController);
 exports.default = AuctionController;

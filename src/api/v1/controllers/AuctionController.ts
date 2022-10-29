@@ -6,12 +6,17 @@ import TYPES from '@pbb/container/types';
 import BaseController from './BaseController';
 import isAuth, { IRequest } from '@pbb/middlewares/isAuth';
 import ResponseUtils from '@pbb/utils/ResponseUtils';
+import { IAuctionService } from '@pbb/services/AuctionService';
+import { IBidMapper } from '@pbb/mappers/BidMapper';
 
 
 @controller('/v1/auction', isAuth)
 export default class AuctionController extends BaseController {
     
-    constructor() {
+    constructor(
+        @inject(TYPES.IAuctionService) private auctionService: IAuctionService,
+        @inject(TYPES.IBidMapper) private bidMapper: IBidMapper,
+    ) {
         super();
     }
 
@@ -23,7 +28,18 @@ export default class AuctionController extends BaseController {
             return
         }
 
-        return ResponseUtils.send(res, 200, "Bid added successfully!", {});
+        const user = req.user;
+        const userId = user._id.toString();
+        const auctionId = req.params.auctionId;
+
+        const bids = await this.auctionService.getBidsList(userId, auctionId);
+        
+        if(!bids) {
+            return ResponseUtils.unprocessable(res, 'Invalid options', {})
+        }
+        const mappedBids = await Promise.all(bids.map((bid) => this.bidMapper.toDto(bid)));
+
+        return ResponseUtils.ok(res, { bids: mappedBids });
     }
 
 }
