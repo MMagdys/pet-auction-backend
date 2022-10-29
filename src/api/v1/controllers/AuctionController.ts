@@ -57,7 +57,7 @@ export default class AuctionController extends BaseController {
         const amount = req.body.amount;
 
         const palcedBid = await this.auctionService.addBid(userId, auctionId, amount);
-        
+
         if(!palcedBid) {
             return ResponseUtils.unprocessable(res, 'Invalid options', {})
         }

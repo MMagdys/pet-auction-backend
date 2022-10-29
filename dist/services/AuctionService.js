@@ -41,7 +41,8 @@ let AuctionService = class AuctionService {
                 return null;
             }
             const retrievedBids = yield this.bidRepository.findMany({
-                filter: { auctionId }
+                filter: { auctionId },
+                populate: 'user'
             });
             return retrievedBids;
         });
@@ -68,6 +69,10 @@ let AuctionService = class AuctionService {
                 amount
             };
             const savedBid = yield this.bidRepository.save(bidProps);
+            if (!savedBid) {
+                return null;
+            }
+            yield savedBid.populate('user');
             return savedBid;
         });
     }

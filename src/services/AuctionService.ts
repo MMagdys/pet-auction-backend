@@ -33,7 +33,8 @@ export default class AuctionService implements IAuctionService {
         }
 
         const retrievedBids = await this.bidRepository.findMany({
-            filter: { auctionId }
+            filter: { auctionId },
+            populate: 'user'
         });
 
         return retrievedBids;
@@ -60,7 +61,7 @@ export default class AuctionService implements IAuctionService {
         if(currentDate < retrievedAuction.startDate || currentDate > retrievedAuction.endDate) {
             return null;
         }
-
+        
         const bidProps: IBidProps = {
             user: userId,
             auction: auctionId,
@@ -69,6 +70,12 @@ export default class AuctionService implements IAuctionService {
 
         const savedBid = await this.bidRepository.save(bidProps);
 
+        if(!savedBid) {
+            return null;
+        }
+
+        await savedBid.populate('user');
+        
         return savedBid;
     }
 
