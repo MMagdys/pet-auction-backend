@@ -4,7 +4,7 @@ import { Document, Model, Types } from 'mongoose';
 export interface IBidProps {
     _id?: Types.ObjectId;
     user: string;
-    pet: string;
+    auction: string;
     amount: number;
 }
 

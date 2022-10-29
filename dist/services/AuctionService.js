@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -17,23 +20,62 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const types_1 = __importDefault(require("@pbb/container/types"));
 const inversify_1 = require("inversify");
 let AuctionService = class AuctionService {
-    constructor() { }
+    constructor(auctionRepository, bidRepository) {
+        this.auctionRepository = auctionRepository;
+        this.bidRepository = bidRepository;
+    }
     getBidsList(userId, auctionId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return null;
+            const retrievedAuction = yield this.auctionRepository.findById(auctionId);
+            if (!retrievedAuction) {
+                return null;
+            }
+            if (retrievedAuction.owner.toString() !== userId) {
+                return null;
+            }
+            const retrievedBids = yield this.bidRepository.findMany({
+                filter: { auctionId }
+            });
+            return retrievedBids;
         });
     }
     addBid(userId, auctionId, amount) {
         return __awaiter(this, void 0, void 0, function* () {
-            return null;
+            const retrievedAuction = yield this.auctionRepository.findById(auctionId);
+            const currentDate = new Date();
+            if (!retrievedAuction) {
+                return null;
+            }
+            if (retrievedAuction.owner.toString() === userId) {
+                return null;
+            }
+            if (amount <= 0) {
+                return null;
+            }
+            if (currentDate < retrievedAuction.startDate || currentDate > retrievedAuction.endDate) {
+                return null;
+            }
+            const bidProps = {
+                user: userId,
+                auction: auctionId,
+                amount
+            };
+            const savedBid = yield this.bidRepository.save(bidProps);
+            return savedBid;
         });
     }
 };
 AuctionService = __decorate([
     (0, inversify_1.injectable)(),
-    __metadata("design:paramtypes", [])
+    __param(0, (0, inversify_1.inject)(types_1.default.IAuctionRepository)),
+    __param(1, (0, inversify_1.inject)(types_1.default.IBidRepository)),
+    __metadata("design:paramtypes", [Object, Object])
 ], AuctionService);
 exports.default = AuctionService;

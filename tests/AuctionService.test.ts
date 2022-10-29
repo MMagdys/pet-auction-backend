@@ -74,14 +74,14 @@ test('Bids can be placed only on current Auction',async () => {
     const currentuctionId = currentAuction._id.toString();
 
     const oldAuction = await auctionFactory.createInstance({
-        startDate: nearPastDate,
-        endDate: nearFutureDate
+        startDate: farPastDate,
+        endDate: nearPastDate
     });
     const oldAuctionId = oldAuction._id.toString();
 
     const upcomingAuction = await auctionFactory.createInstance({
-        startDate: nearPastDate,
-        endDate: nearFutureDate
+        startDate: nearFutureDate,
+        endDate: farFutureDate
     });
     const upcomingAuctionId = upcomingAuction._id.toString();
 
@@ -89,7 +89,7 @@ test('Bids can be placed only on current Auction',async () => {
     const bidOnOldAuction = await auctionService.addBid(userId, oldAuctionId, 1200);
     const bidOnUpcomingAuction = await auctionService.addBid(userId, upcomingAuctionId, 1200);
 
-    expect(bidOnCurrentAuction).toHaveLength(1);
+    expect(bidOnCurrentAuction).not.toBeNull();
     expect(bidOnOldAuction).toBeNull();
     expect(bidOnUpcomingAuction).toBeNull();
 });
