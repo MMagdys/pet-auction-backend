@@ -7,6 +7,9 @@ export interface IUserProps {
     username: string;
     firstName: string;
     lastName: string;
+    email?: string;
+    phone?: string;
+    userStatus?: number;
     forgotPasswordToken?: string;
 }
 

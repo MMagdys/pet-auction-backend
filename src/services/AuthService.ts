@@ -27,13 +27,15 @@ export default class AuthService implements IAuthService {
         return JwtHelper.sign(payload, config.jwt.refreshTokenValidPeriod);
     }
 
-    public generateAccessToken(userId: Types.ObjectId): string {
+    public generateAccessToken(userId: Types.ObjectId, expiresIn?: number ): string {
 
         const payload = {
             userId: userId.toString(),
         }
+
+        const expiringDate = expiresIn? expiresIn: config.jwt.accessTokenValidPeriod;
         
-        return JwtHelper.sign(payload, config.jwt.accessTokenValidPeriod);
+        return JwtHelper.sign(payload, expiringDate);
     }
 
 }

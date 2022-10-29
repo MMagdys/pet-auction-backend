@@ -29,11 +29,12 @@ let AuthService = class AuthService {
         const payload = { refreshToken: (0, rand_token_1.uid)(256) };
         return JwtHelper_1.default.sign(payload, config_1.default.jwt.refreshTokenValidPeriod);
     }
-    generateAccessToken(userId) {
+    generateAccessToken(userId, expiresIn) {
         const payload = {
             userId: userId.toString(),
         };
-        return JwtHelper_1.default.sign(payload, config_1.default.jwt.accessTokenValidPeriod);
+        const expiringDate = expiresIn ? expiresIn : config_1.default.jwt.accessTokenValidPeriod;
+        return JwtHelper_1.default.sign(payload, expiringDate);
     }
 };
 AuthService = __decorate([
