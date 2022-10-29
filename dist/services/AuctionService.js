@@ -37,7 +37,7 @@ let AuctionService = class AuctionService {
             if (!retrievedAuction) {
                 return null;
             }
-            if (retrievedAuction.owner.toString() !== userId) {
+            if (retrievedAuction.owner.toString() != userId) {
                 return null;
             }
             const retrievedBids = yield this.bidRepository.findMany({
@@ -53,7 +53,7 @@ let AuctionService = class AuctionService {
             if (!retrievedAuction) {
                 return null;
             }
-            if (retrievedAuction.owner.toString() === userId) {
+            if (retrievedAuction.owner.toString() == userId) {
                 return null;
             }
             if (amount <= 0) {

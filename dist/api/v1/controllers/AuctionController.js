@@ -52,6 +52,23 @@ let AuctionController = class AuctionController extends BaseController_1.default
             return ResponseUtils_1.default.ok(res, { bids: mappedBids });
         });
     }
+    placeBid(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.validateRequest(req, res)) {
+                return;
+            }
+            const user = req.user;
+            const userId = user._id.toString();
+            const auctionId = req.params.auctionId;
+            const amount = req.body.amount;
+            const palcedBid = yield this.auctionService.addBid(userId, auctionId, amount);
+            if (!palcedBid) {
+                return ResponseUtils_1.default.unprocessable(res, 'Invalid options', {});
+            }
+            const mappedBid = yield this.bidMapper.toDto(palcedBid);
+            return ResponseUtils_1.default.created(res, { bid: mappedBid });
+        });
+    }
 };
 __decorate([
     (0, inversify_express_utils_1.httpGet)('/:auctionId/bid'),
@@ -61,6 +78,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuctionController.prototype, "listBids", null);
+__decorate([
+    (0, inversify_express_utils_1.httpPost)('/:auctionId/bid'),
+    __param(0, (0, inversify_express_utils_1.request)()),
+    __param(1, (0, inversify_express_utils_1.response)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuctionController.prototype, "placeBid", null);
 AuctionController = __decorate([
     (0, inversify_express_utils_1.controller)('/v1/auction', isAuth_1.default),
     __param(0, (0, inversify_1.inject)(types_1.default.IAuctionService)),

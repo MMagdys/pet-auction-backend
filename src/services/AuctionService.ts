@@ -28,7 +28,7 @@ export default class AuctionService implements IAuctionService {
             return null;
         }
 
-        if(retrievedAuction.owner.toString() !== userId) {
+        if(retrievedAuction.owner.toString() != userId) {
             return null;
         }
 
@@ -49,7 +49,7 @@ export default class AuctionService implements IAuctionService {
             return null;
         }
 
-        if(retrievedAuction.owner.toString() === userId) {
+        if(retrievedAuction.owner.toString() == userId) {
             return null;
         }
 
