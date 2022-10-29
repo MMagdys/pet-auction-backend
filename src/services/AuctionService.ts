@@ -2,7 +2,6 @@ import TYPES from '@pbb/container/types';
 import { IBidDocument, IBidProps } from '@pbb/models/bid/IBid';
 import { IAuctionRepository } from '@pbb/repositories/AuctionRepository';
 import { IBidRepository } from '@pbb/repositories/BidRepository';
-import { IUserRepository } from '@pbb/repositories/UserRepository';
 import { inject, injectable } from 'inversify';
 
 

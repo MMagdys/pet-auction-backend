@@ -4,10 +4,6 @@ import mongoose from "mongoose";
 import container from '../src/container';
 import TYPES from '../src/container/types';
 import { IAuctionService } from "../src/services/AuctionService";
-import { IUserRepository } from "../src/repositories/UserRepository";
-import { IAuctionRepository } from "../src/repositories/AuctionRepository";
-import { IUserDocument, IUserProps } from "../src/models/user/IUser";
-import { IAuctionDocument, IAuctionProps } from "../src/models/auction/IAuction";
 import { DBHelper } from "./helpers/DbHelper";
 import Factory from 'fake-factory';
 
