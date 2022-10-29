@@ -6,7 +6,7 @@ import { inject, injectable } from 'inversify';
 export interface IAuctionService {
 
     getBidsList(userId: string, auctionId: string): Promise<IBidDocument[] | null>;
-    addBid(userId: string, auctionId: string): Promise<IBidDocument | null>;
+    addBid(userId: string, auctionId: string, amount: number): Promise<IBidDocument | null>;
 }
 
 @injectable()
@@ -21,7 +21,7 @@ export default class AuctionService implements IAuctionService {
     }
 
 
-    public async addBid(userId: string, auctionId: string): Promise<IBidDocument | null> {
+    public async addBid(userId: string, auctionId: string, amount: number): Promise<IBidDocument | null> {
 
         return null;
     }

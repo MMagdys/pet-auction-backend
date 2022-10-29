@@ -26,7 +26,7 @@ let AuctionService = class AuctionService {
             return null;
         });
     }
-    addBid(userId, auctionId) {
+    addBid(userId, auctionId, amount) {
         return __awaiter(this, void 0, void 0, function* () {
             return null;
         });
